@@ -4,15 +4,17 @@ Lightweight, edge-optimized memory system for conversational agents.
 
 ## Current Benchmark Results
 
-MemEdge was evaluated on the **LoCoMo** benchmark (full validation set, 1986 examples).
+MemEdge was evaluated on the **LoCoMo** benchmark (full set, 1986 examples).
 
-- **MemEdge v4 (with cache)**: **42.5%** accuracy
-- Simple RAG: 41.9% accuracy
-- Full Context: 40.6% accuracy
+| System                  | Accuracy | E2E Latency (avg) | Notes                     |
+|-------------------------|----------|-------------------|---------------------------|
+| **MemEdge v4 (cache)**  | **42.5%**    | **2.78s**             | Best accuracy + speed     |
+| Simple RAG              | 41.9%    | 4.44s             | -                         |
+| Full Context            | 40.6%    | 3.22s             | Highest token usage       |
 
-MemEdge achieved the best accuracy while being significantly faster thanks to conversation-level caching.
+MemEdge achieved the highest accuracy while maintaining significantly lower average latency.
 
-→ See the full report: [docs/locomo_benchmark.md](docs/locomo_benchmark.md)
+→ See the full detailed report: [docs/locomo_benchmark.md](docs/locomo_benchmark.md)
 
 ## Reproduce
 
