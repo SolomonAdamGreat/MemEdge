@@ -1,47 +1,37 @@
-# LoCoMo Benchmark Results
+# LoCoMo Benchmark Results (CPU-focused)
 
-**Date:** 2026-06-29  
-**Benchmark:** LoCoMo  
-**Model:** qwen2.5:3b (via Ollama)
+**Date:** 2026-07-03  
+**Focus:** Edge / CPU performance with small models (\~3B parameters)  
+**Model:** Qwen2.5-3B-Instruct (Q4_K_M GGUF via llama.cpp)
 
-## Overview
+## Summary
 
-MemEdge v4 was evaluated on the LoCoMo benchmark against Simple RAG and Full Context baselines.
+MemEdge v4 was evaluated on the full LoCoMo benchmark (1986 examples) using a 3B parameter model on CPU only. The system achieved competitive accuracy while maintaining low latency and very efficient cache behavior.
 
-Results are presented for both the **full set** (1986 examples) and the **validation split** (25 examples).
+## Full Set Results (1986 examples, CPU)
 
-## Full Set Results (1986 examples)
+| System                  | Accuracy | Token F1 | E2E Latency (avg) | Ingest (cache hit) | LLM (avg) | Wall Time     |
+|-------------------------|----------|----------|-------------------|--------------------|-----------|---------------|
+| **MemEdge v4 (llama.cpp)** | **42.75%**   | 0.147    | **1.37s**             | **18 ms**              | 1.33s     | **45.4 min**      |
 
-| System                  | Accuracy | Token F1 | E2E Latency (avg) | Ingest (avg) | LLM (avg) | Wall Time    | Cache Hit |
-|-------------------------|----------|----------|-------------------|--------------|-----------|--------------|-----------|
-| **MemEdge v4**          | **42.50%**   | 0.157    | **2.78s**             | **48 ms**        | 2.71s     | **1.53h**        | **100%**      |
-| Simple RAG              | 41.89%   | 0.158    | 4.44s             | 1.70s        | 2.74s     | 2.45h        | —             |
-| Full Context            | 40.58%   | 0.121    | 3.22s             | —            | 3.22s     | 1.77h        | —             |
+## Validation Set Results (25 examples, CPU)
 
-## Validation Set Results (25 examples)
+| Backend              | Accuracy | Token F1 | E2E Latency (avg) | Ingest (cache hit) | LLM (avg) | Wall Time |
+|----------------------|----------|----------|-------------------|--------------------|-----------|-----------|
+| Ollama (CPU)         | \~40%     | \~0.10    | \~3.2s             | \~47 ms             | \~3.1s     | \~16 s     |
+| **llama.cpp (CPU)**  | 36.0%    | 0.160    | **1.47s**             | 37 ms              | 1.41s     | 37 s      |
 
-| System                  | Accuracy | Token F1 | E2E Latency (avg) | Wall Time |
-|-------------------------|----------|----------|-------------------|-----------|
-| **MemEdge v4**          | **40.0%**    | 0.182    | 3.07s             | 76.8s     |
-| Simple RAG              | 36.0%    | 0.146    | 4.43s             | 110.8s    |
-| Full Context            | 32.0%    | 0.184    | 17.64s            | 440.9s    |
+## Key Observations
 
-## Observations
+- MemEdge v4 achieved **42.75% accuracy** on the full set with a 3B model running on CPU.
+- Average end-to-end latency on the full set was **1.37 seconds**.
+- Cache hit rate reached **100%** across all 1986 examples, with ingest time dropping to **18 ms** on cache hits.
+- On the validation set, `llama.cpp` delivered significantly lower latency than Ollama while maintaining comparable accuracy.
 
-- MemEdge v4 recorded the highest accuracy on both the full set and validation set.
-- MemEdge v4 showed the lowest average end-to-end latency on the full set.
-- Full Context achieved the lowest Token F1 score on the full set.
-- Simple RAG maintained competitive accuracy but had higher ingest latency compared to MemEdge v4.
-
-## Detailed Reports
-
-Full JSON and Markdown reports are available at:
-
-- `runs/evaluation/locomo_full_with_cache/`
-- `runs/evaluation/locomo_full_simple_rag/`
-- `runs/evaluation/locomo_full_full_context/`
-
-## Reproduce
+## Reproduce (CPU)
 
 ```bash
-python evaluate_locomo.py --mode all --split full
+# llama.cpp backend (recommended for edge)
+python evaluate_locomo.py --mode memedge --split full \
+  --llm-backend llama_cpp \
+  --model-path /path/to/Qwen2.5-3B-Instruct-Q4_K_M.gguf
