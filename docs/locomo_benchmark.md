@@ -1,7 +1,5 @@
 ---
 
-#### 2. `docs/locomo_benchmark.md` (ajánlott teljes verzió)
-
 ```markdown
 # LoCoMo Benchmark Results – Edge / CPU Focus
 
