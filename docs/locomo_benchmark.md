@@ -1,6 +1,3 @@
----
-
-```markdown
 # LoCoMo Benchmark Results – Edge / CPU Focus
 
 **Date:** 2026-07-03  
